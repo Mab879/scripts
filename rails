@@ -1,0 +1,64 @@
+echo "Checking for SSH key, generating one if it doesn't exist"
+	[[ -f ~/.ssh/id_rsa.pub || -f ~/.ssh/id_dsa.pub ]] || ssh-keygen -t rsa
+
+echo "Copying your public key to clipboard. Paste it into your Github Account at"
+	[[ -f ~/.ssh/id_dsa.pub ]] && cat ~/.ssh/id_dsa.pub | xclip
+	[[ -f ~/.ssh/id_rsa.pub ]] && cat ~/.ssh/id_rsa.pub | xclip
+echo "https://github.com/account/ssh"
+
+echo "Using apt-get to install Operating System packages, so let's update it first..."
+	sudo apt-get update -y
+echo "Installing Operating System Packages"
+
+	sudo apt-get install build-essential bison openssl libreadline6 libreadline6-dev curl git-core zlib1g zlib1g-dev libssl-dev libyaml-dev libsqlite3-0 libsqlite3-dev sqlite3 libxml2-dev libxslt-dev autoconf libc6-dev -y
+
+echo "Install Postgres, a great open source relational database ..."
+  sudo apt-get install libpq5 libpq-dev postgresql -y
+echo "Install MySQl"
+	sudo apt-get install mysql-server mysql-client -y
+
+echo "Install Redis, a key-value database ..."
+  sudo apt-get install redis-server -y
+
+echo "Installing ack, a good way to search through files ..."
+  sudo apt-get install ack -y
+
+echo "Installing ImageMagick, good for cropping and re-sizing images ..."
+  sudo apt-get install imagemagick --fix-missing -y
+
+echo "Installing RVM (Ruby Version Manager) ..."
+  curl -s https://rvm.beginrescueend.com/install/rvm -o rvm-installer ; chmod +x rvm-installer ; ./rvm-installer --version latest
+echo "Installing Rubies"
+echo "Please, get some Soda or coffee as rvm works"
+echo "Installing Versions 1.9.2 of ruby"
+	rvm install ruby-1.9.2
+	rvm install 1.9.2-cedar
+	rvm install 1.9.2-mri
+echo "Install versions 1.8.9 of Ruby for legacy stuff"
+	rvm install ree
+	rvm install ruby-1.8.9
+echo "Installing Gems..."
+echo "# The Following gems will be installed on each ruby:"	
+	echo "## rails"
+	echo "## mysql2"
+	echo "## therubyracer-heroku"
+	echo "## bundler"
+	echo "## taps"
+	echo "## sqlite3"
+	echo "## Heroku"
+echo "The gems are installed in the 'global gemset which means that any gemset you make will have these gems."
+	echo ""
+	rvm use 1.9.2@global --default
+		gem install rails mysql2 pg therubyracer-heroku bundler taps sqlite3 heroku --no-rdoc --no-ri
+	rvm 1.9.2-cedar@global 
+		rvm gemset create rails
+		gem install rails mysql2 pg therubyracer-heroku bundler taps sqlite3 heroku --no-rdoc --no-ri
+	rvm 1.9.2-mri@global 
+		rvm gemset create rails
+		gem install rails mysql2 pg therubyracer-heroku bundler taps sqlite3 heroku --no-rdoc --no-ri
+	rvm ree@global
+		rvm gemset create rails
+		gem install rails mysql2 pg therubyracer-heroku bundler taps sqlite3 heroku --no-rdoc --no-ri
+	rvm 1.8.9@global
+		rvm gemset create rails
+		gem install rails mysql2 pg therubyracer-heroku bundler taps sqlite3 heroku --no-rdoc --no-ri
